@@ -23,10 +23,12 @@
     {{player}}
 </p>
 
-<from class="form-inline">
-    <div class="form-group">
-        <label class="sr-only" for="player-name">Player name</label>
-        <input type="text" class="form-control" id="player-name" placeholder="Player Name" ng-model="addPlayersController.playerToBeAdded">
-    </div>
-    <div class="btn btn-default" ng-click="addPlayersController.addPlayer()">Add Player</div>
-</from>
+<div class="text-center">
+    <from class="form-inline">
+        <div class="form-group">
+            <label class="sr-only" for="player-name">Player name</label>
+            <input type="text" class="form-control" id="player-name" placeholder="Player Name" ng-model="addPlayersController.playerToBeAdded">
+        </div>
+        <div class="btn btn-default" ng-click="addPlayersController.addPlayer()">Add Player</div>
+    </from>
+</div>
