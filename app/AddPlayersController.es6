@@ -22,6 +22,7 @@ class AddPlayersController {
 
     addPlayer() {
         this.players.push(this.playerToBeAdded);
+        this.playerToBeAdded = '';
     }
 }
 
