@@ -13,4 +13,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-Add some players!
+<p class="lead text-center">
+    Add as many players as you want for the next Mölkky round!
+</p>
+
+<hr/>
+
+<p class="text-center" ng-repeat="player in addPlayersController.players">
+    {{player}}
+</p>
+
+<div class="text-center">
+    <from class="form-inline">
+        <div class="form-group">
+            <label class="sr-only" for="player-name">Player name</label>
+            <input type="text" class="form-control" id="player-name" placeholder="Player Name" ng-model="addPlayersController.playerToBeAdded">
+        </div>
+        <div class="btn btn-default" ng-click="addPlayersController.addPlayer()">Add Player</div>
+    </from>
+</div>

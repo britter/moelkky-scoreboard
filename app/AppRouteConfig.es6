@@ -24,7 +24,9 @@ export default $routeProvider => {
             template: homeTemplate
         })
         .when('/add-players', {
-            template: addPlayersTemplate
+            template: addPlayersTemplate,
+            controller: 'AddPlayersController',
+            controllerAs: 'addPlayersController'
         })
         .otherwise({
             redirectTo: '/home'
