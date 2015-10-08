@@ -13,7 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import angular from 'angular';
-import 'angular-route';
+import app from './App';
 
-export default angular.module('moelkkyScoreboard', ['ngRoute']);
+import homeTemplate from './HomeTemplate.html';
+import addPlayersTemplate from './AddPlayersTemplate.html';
+
+export default $routeProvider => {
+    $routeProvider
+        .when('/home', {
+            template: homeTemplate
+        })
+        .when('/add-players', {
+            template: addPlayersTemplate
+        })
+        .otherwise({
+            redirectTo: '/home'
+        });
+};

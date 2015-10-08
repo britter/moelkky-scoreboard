@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 import app from './App';
+import appRoutConfig from './AppRouteConfig.es6';
 import scoreboardDirective from './ScoreboardDirective';
 
+app.config(appRoutConfig);
 app.directive('scoreboard', scoreboardDirective);
