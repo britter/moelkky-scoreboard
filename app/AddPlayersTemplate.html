@@ -16,6 +16,13 @@
 <p class="lead text-center">
     Add as many players as you want for the next Mölkky round!
 </p>
+
+<hr/>
+
+<p class="text-center" ng-repeat="player in addPlayersController.players">
+    {{player}}
+</p>
+
 <from class="form-inline">
     <div class="form-group">
         <label class="sr-only" for="player-name">Player name</label>
