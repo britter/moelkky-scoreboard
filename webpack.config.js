@@ -19,7 +19,7 @@ module.exports = {
     output: {
         path: __dirname + "/dist",
         filename: "bundle.js",
-        publicPath: '/dist/'
+        publicPath: '/'
     },
     resolve: {
         extensions: ['', '.js', '.es6']
@@ -46,5 +46,8 @@ module.exports = {
     eslint: {
         configFile: './.eslintrc'
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+    devServer: {
+        contentBase: 'dist/'
+    }
 };

@@ -30,5 +30,5 @@ node_modules
 .lock-wscript
 
 # Build output
-dist/
+dist/bundle.*
 
