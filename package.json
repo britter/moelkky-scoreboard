@@ -5,7 +5,11 @@
   "main": "app/index.es6",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "node_modules/webpack/bin/webpack.js && node_modules/gh-pages/bin/gh-pages -d dist/"
+    "build": "node_modules/webpack/bin/webpack.js",
+    "deploy": "node_modules/gh-pages/bin/gh-pages -d dist/",
+    "preversion": "npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags && npm run deploy"
   },
   "repository": {
     "type": "git",
