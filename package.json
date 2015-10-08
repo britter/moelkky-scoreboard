@@ -1,6 +1,6 @@
 {
   "name": "moelkky-scoreboard",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple scorboard for the famous game 'Mölkky'",
   "main": "app/index.es6",
   "scripts": {
