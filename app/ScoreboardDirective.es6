@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 import template from './ScoreBoardTemplate.html';
+import {version} from 'json!../package.json';
 
 export default function ScoreboardDirective() {
     return {
         restrict: 'E',
-        template
+        template,
+        controller: $scope => {
+            $scope.version = version;
+        }
     }
 }
