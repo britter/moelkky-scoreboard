@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/dist/";
+/******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -79,18 +79,9 @@
 	
 	var _AddPlayersController2 = _interopRequireDefault(_AddPlayersController);
 	
-	var _angular = __webpack_require__(2);
-	
-	var _angular2 = _interopRequireDefault(_angular);
-	
 	_App2['default'].config(_AppRouteConfigEs62['default']);
 	_App2['default'].directive('scoreboard', _ScoreboardDirective2['default']);
 	_App2['default'].controller('AddPlayersController', _AddPlayersController2['default']);
-	
-	/* @ngInject */
-	_angular2['default'].module('moelkkyScoreboard').controller('ngAnnotateTestController', function ($scope) {
-	  //do nothing
-	});
 
 /***/ },
 /* 1 */
@@ -30071,6 +30062,10 @@
 	 */
 	'use strict';
 	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
 	var _App = __webpack_require__(1);
@@ -30093,7 +30088,7 @@
 	
 	var _RulesTemplateHtml2 = _interopRequireDefault(_RulesTemplateHtml);
 	
-	_App2['default'].config(function ($routeProvider) {
+	exports['default'] = function ($routeProvider) {
 	    $routeProvider.when('/home', {
 	        template: _HomeTemplateHtml2['default']
 	    }).when('/add-players', {
@@ -30107,7 +30102,9 @@
 	    }).otherwise({
 	        redirectTo: '/home'
 	    });
-	});
+	};
+	
+	module.exports = exports['default'];
 
 /***/ },
 /* 7 */
