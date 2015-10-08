@@ -75,7 +75,7 @@
 	
 	var _ScoreboardDirective2 = _interopRequireDefault(_ScoreboardDirective);
 	
-	var _AddPlayersController = __webpack_require__(13);
+	var _AddPlayersController = __webpack_require__(14);
 	
 	var _AddPlayersController2 = _interopRequireDefault(_AddPlayersController);
 	
@@ -30162,10 +30162,15 @@
 	
 	var _ScoreBoardTemplateHtml2 = _interopRequireDefault(_ScoreBoardTemplateHtml);
 	
+	var _jsonPackageJson = __webpack_require__(13);
+	
 	function ScoreboardDirective() {
 	    return {
 	        restrict: 'E',
-	        template: _ScoreBoardTemplateHtml2['default']
+	        template: _ScoreBoardTemplateHtml2['default'],
+	        controller: function controller($scope) {
+	            $scope.version = _jsonPackageJson.version;
+	        }
 	    };
 	}
 	
@@ -30175,10 +30180,72 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = "<!--\n  Copyright 2015 Benedikt Ritter\n\n  Licensed under the Apache License, Version 2.0 (the \"License\");\n  you may not use this file except in compliance with the License.\n  You may obtain a copy of the License at\n\n      http://www.apache.org/licenses/LICENSE-2.0\n\n  Unless required by applicable law or agreed to in writing, software\n  distributed under the License is distributed on an \"AS IS\" BASIS,\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  See the License for the specific language governing permissions and\n  limitations under the License.\n-->\n<div class=\"container\">\n    <h1 class=\"text-center\">Mölkky Scoreboard</h1>\n\n    <div class=\"row\">\n        <div class=\"col-xs-12\">\n            <div ng-view></div>\n        </div>\n    </div>\n    \n    <hr />\n    <footer>\n        <div class=\"row\">\n            <div class=\"col-xs-6\">\n                <p>&copy; Benedikt Ritter 2015</p>\n            </div>\n            <div class=\"col-xs-6 text-right\">\n                <a ng-href=\"#/rules\">Mölkky Rules</a>\n            </div>\n        </div>\n    </footer>\n</div>\n";
+	module.exports = "<!--\n  Copyright 2015 Benedikt Ritter\n\n  Licensed under the Apache License, Version 2.0 (the \"License\");\n  you may not use this file except in compliance with the License.\n  You may obtain a copy of the License at\n\n      http://www.apache.org/licenses/LICENSE-2.0\n\n  Unless required by applicable law or agreed to in writing, software\n  distributed under the License is distributed on an \"AS IS\" BASIS,\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  See the License for the specific language governing permissions and\n  limitations under the License.\n-->\n<div class=\"container\">\n    <h1 class=\"text-center\">Mölkky Scoreboard</h1>\n\n    <div class=\"row\">\n        <div class=\"col-xs-12\">\n            <div ng-view></div>\n        </div>\n    </div>\n    \n    <hr />\n    <footer>\n        <div class=\"row\">\n            <div class=\"col-xs-4\">\n                <p>&copy; Benedikt Ritter 2015</p>\n            </div>\n            <div class=\"col-xs-4 text-center\">\n                v{{version}}\n            </div>\n            <div class=\"col-xs-4 text-right\">\n                <a ng-href=\"#/rules\">Mölkky Rules</a>\n            </div>\n        </div>\n    </footer>\n</div>\n";
 
 /***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"name": "moelkky-scoreboard",
+		"version": "0.0.2",
+		"description": "A simple scorboard for the famous game 'Mölkky'",
+		"main": "app/index.es6",
+		"scripts": {
+			"test": "karma start karma.config.js",
+			"build": "node_modules/webpack/bin/webpack.js",
+			"deploy": "node_modules/gh-pages/bin/gh-pages -d dist/",
+			"preversion": "npm test",
+			"version": "npm run build",
+			"postversion": "git push && git push --tags && npm run deploy"
+		},
+		"repository": {
+			"type": "git",
+			"url": "github.com/britter/moelkky-scoreboard"
+		},
+		"keywords": [
+			"moelkky",
+			"scoreboard"
+		],
+		"author": "Benedikt Ritter",
+		"license": "Apache-2.0",
+		"dependencies": {
+			"angular": "^1.4.7",
+			"angular-route": "^1.4.7",
+			"bootstrap": "^3.3.5",
+			"jquery": "^2.1.4",
+			"lodash": "^3.10.1"
+		},
+		"devDependencies": {
+			"assert": "^1.3.0",
+			"babel-core": "^5.8.25",
+			"babel-loader": "^5.3.2",
+			"css-loader": "^0.19.0",
+			"eslint": "^1.6.0",
+			"eslint-loader": "^1.0.0",
+			"eslint-plugin-angular": "^0.12.0",
+			"gh-pages": "^0.4.0",
+			"html-loader": "^0.3.0",
+			"jasmine": "^2.3.2",
+			"jasmine-expect": "^1.22.3",
+			"json-loader": "^0.5.3",
+			"karma": "^0.13.10",
+			"karma-jasmine": "^0.3.6",
+			"karma-phantomjs-launcher": "^0.2.1",
+			"karma-sourcemap-loader": "^0.3.5",
+			"karma-spec-reporter": "0.0.20",
+			"karma-webpack": "^1.7.0",
+			"mocha": "^2.3.3",
+			"mocha-loader": "^0.7.1",
+			"ng-annotate-loader": "0.0.10",
+			"phantomjs": "^1.9.18",
+			"style-loader": "^0.12.4",
+			"webpack": "^1.12.2"
+		}
+	};
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -30208,7 +30275,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _lodash = __webpack_require__(14);
+	var _lodash = __webpack_require__(15);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -30237,7 +30304,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -42592,10 +42659,10 @@
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)(module), (function() { return this; }())))
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
