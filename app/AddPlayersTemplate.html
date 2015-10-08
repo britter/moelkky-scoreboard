@@ -32,3 +32,9 @@
         <div class="btn btn-default" ng-click="addPlayersController.addPlayer()">Add Player</div>
     </from>
 </div>
+
+<hr />
+
+<div ng-if="addPlayersController.players.length !== 0" class="text-center">
+    <a class="btn btn-primary" ng-href="#/game">Start game</a>
+</div>

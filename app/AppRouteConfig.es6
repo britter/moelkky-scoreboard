@@ -17,6 +17,7 @@ import app from './App';
 
 import homeTemplate from './HomeTemplate.html';
 import addPlayersTemplate from './AddPlayersTemplate.html';
+import gameTemplate from './GameTemplate.html';
 
 export default $routeProvider => {
     $routeProvider
@@ -27,6 +28,9 @@ export default $routeProvider => {
             template: addPlayersTemplate,
             controller: 'AddPlayersController',
             controllerAs: 'addPlayersController'
+        })
+        .when('/game', {
+            template: gameTemplate
         })
         .otherwise({
             redirectTo: '/home'
