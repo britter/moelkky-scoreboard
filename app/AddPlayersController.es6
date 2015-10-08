@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import app from './App';
-import appRoutConfig from './AppRouteConfig.es6';
-import scoreboardDirective from './ScoreboardDirective';
-import AddPlayersController from './AddPlayersController';
+class AddPlayersController {
 
-app.config(appRoutConfig);
-app.directive('scoreboard', scoreboardDirective);
-app.controller('AddPlayersController', AddPlayersController);
+    constructor() {
+        this.players = [];
+        this.playerToBeAdded = '';
+    }
+
+    addPlayer() {
+        this.players.push(this.playerToBeAdded);
+    }
+}
+
+export default AddPlayersController;
