@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ from 'lodash';
+
 class AddPlayersController {
 
     constructor() {
@@ -21,8 +23,10 @@ class AddPlayersController {
     }
 
     addPlayer() {
-        this.players.push(this.playerToBeAdded);
-        this.playerToBeAdded = '';
+        if(!_.isEmpty(this.playerToBeAdded)) {
+            this.players.push(this.playerToBeAdded);
+            this.playerToBeAdded = '';
+        }
     }
 }
 
