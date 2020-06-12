@@ -7,7 +7,7 @@ module Main exposing (..)
 --
 
 import Browser
-import Html exposing (Html, button, div, li, text, ul)
+import Html exposing (Html, button, div, table, td, text, tr)
 import Html.Events exposing (onClick)
 
 
@@ -24,12 +24,16 @@ main =
 
 
 type alias Model =
+    List ScoreRow
+
+
+type alias ScoreRow =
     List Int
 
 
 init : Model
 init =
-    [ 0 ]
+    [ [ 0, 1, 2, 3, 4, 5, 6 ] ]
 
 
 
@@ -45,7 +49,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment ->
-            model ++ [ 1 ]
+            model ++ [ [ 1 ] ]
 
         Decrement ->
             []
@@ -55,20 +59,25 @@ update msg model =
 -- VIEW
 
 
-renderList : Model -> Html Msg
-renderList model =
-    ul [] (List.map renderListItem model)
+renderScoreTable : Model -> Html Msg
+renderScoreTable model =
+    table [] (List.map renderScoreRow model)
 
 
-renderListItem : Int -> Html Msg
-renderListItem x =
-    li [] [ text (String.fromInt x) ]
+renderScoreRow : ScoreRow -> Html Msg
+renderScoreRow row =
+    tr [] (List.map renderScore row)
+
+
+renderScore : Int -> Html Msg
+renderScore score =
+    td [] [ text (String.fromInt score) ]
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
-        , renderList model
+        , renderScoreTable model
         , button [ onClick Increment ] [ text "+" ]
         ]
