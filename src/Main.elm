@@ -24,6 +24,12 @@ main =
 
 
 type alias Model =
+    { currentPlayer : Int
+    , scores : ScoreTable
+    }
+
+
+type alias ScoreTable =
     List ScoreRow
 
 
@@ -33,7 +39,7 @@ type alias ScoreRow =
 
 init : Model
 init =
-    [ [ 0, 1, 2, 3, 4, 5, 6 ] ]
+    { currentPlayer = 0, scores = [] }
 
 
 
@@ -49,10 +55,10 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Increment ->
-            model ++ [ [ 1 ] ]
+            { model | currentPlayer = model.currentPlayer + 1 }
 
         Decrement ->
-            []
+            { model | currentPlayer = model.currentPlayer - 1 }
 
 
 
@@ -61,7 +67,10 @@ update msg model =
 
 renderScoreTable : Model -> Html Msg
 renderScoreTable model =
-    table [] (List.map renderScoreRow model)
+    div []
+        [ text ("Current player: " ++ String.fromInt model.currentPlayer)
+        , table [] (List.map renderScoreRow model.scores)
+        ]
 
 
 renderScoreRow : ScoreRow -> Html Msg
