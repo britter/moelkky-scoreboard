@@ -7,8 +7,9 @@ module Main exposing (..)
 --
 
 import Browser
-import Html exposing (Html, button, div, table, td, text, tr)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, input, table, td, text, tr)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick, onInput)
 
 
 
@@ -25,6 +26,7 @@ main =
 
 type alias Model =
     { currentPlayer : Int
+    , currentScore : Maybe Int
     , scores : ScoreTable
     }
 
@@ -39,7 +41,7 @@ type alias ScoreRow =
 
 init : Model
 init =
-    { currentPlayer = 0, scores = [] }
+    { currentPlayer = 0, currentScore = Nothing, scores = [] }
 
 
 
@@ -49,6 +51,8 @@ init =
 type Msg
     = Increment
     | Decrement
+    | Scored String
+    | Score
 
 
 update : Msg -> Model -> Model
@@ -59,6 +63,22 @@ update msg model =
 
         Decrement ->
             { model | currentPlayer = model.currentPlayer - 1 }
+
+        Scored score ->
+            { model | currentScore = String.toInt score }
+
+        Score ->
+            { model | currentPlayer = model.currentPlayer + 1, scores = newScores model.scores model.currentScore }
+
+
+newScores : ScoreTable -> Maybe Int -> ScoreTable
+newScores table currentScore =
+    case currentScore of
+        Nothing ->
+            table
+
+        Just score ->
+            table ++ [ [ score ] ]
 
 
 
@@ -83,10 +103,19 @@ renderScore score =
     td [] [ text (String.fromInt score) ]
 
 
+renderScoreInput : Html Msg
+renderScoreInput =
+    div []
+        [ input [ type_ "number", value "0", onInput Scored ] []
+        , button [ onClick Score ] [ text "Add" ]
+        ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
         , renderScoreTable model
+        , renderScoreInput
         , button [ onClick Increment ] [ text "+" ]
         ]
