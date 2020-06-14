@@ -59,21 +59,13 @@ init =
 
 
 type Msg
-    = Increment
-    | Decrement
-    | ScoreInputChanged String
+    = ScoreInputChanged String
     | Score
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            { model | currentPlayer = model.currentPlayer + 1 }
-
-        Decrement ->
-            { model | currentPlayer = model.currentPlayer - 1 }
-
         ScoreInputChanged newScoreInput ->
             { model | currentScoreInput = String.toInt newScoreInput }
 
@@ -124,8 +116,6 @@ renderScoreInput =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , renderScoreTable model
+        [ renderScoreTable model
         , renderScoreInput
-        , button [ onClick Increment ] [ text "+" ]
         ]
