@@ -26,22 +26,32 @@ main =
 
 type alias Model =
     { currentPlayer : Int
-    , currentScore : Maybe Int
-    , scores : ScoreTable
+    , currentScoreInput : Maybe Int
+    , scores : Scores
     }
 
 
-type alias ScoreTable =
-    List ScoreRow
+type alias Scores =
+    List PlayerScores
 
 
-type alias ScoreRow =
-    List Int
+type alias PlayerScores =
+    { name : String
+    , scores : List Int
+    }
 
 
 init : Model
 init =
-    { currentPlayer = 0, currentScore = Nothing, scores = [] }
+    { currentPlayer = 0
+    , currentScoreInput = Nothing
+    , scores =
+        [ { name = "Adam", scores = [ 2, 5, 9 ] }
+        , { name = "Bianca", scores = [ 11, 1, 0 ] }
+        , { name = "Charles", scores = [ 5, 4, 8 ] }
+        , { name = "Deborah", scores = [ 9, 0, 3 ] }
+        ]
+    }
 
 
 
@@ -51,7 +61,7 @@ init =
 type Msg
     = Increment
     | Decrement
-    | Scored String
+    | ScoreInputChanged String
     | Score
 
 
@@ -64,21 +74,21 @@ update msg model =
         Decrement ->
             { model | currentPlayer = model.currentPlayer - 1 }
 
-        Scored score ->
-            { model | currentScore = String.toInt score }
+        ScoreInputChanged newScoreInput ->
+            { model | currentScoreInput = String.toInt newScoreInput }
 
         Score ->
-            { model | currentPlayer = model.currentPlayer + 1, scores = newScores model.scores model.currentScore }
+            { model | currentPlayer = model.currentPlayer + 1, scores = newScores model.scores model.currentScoreInput }
 
 
-newScores : ScoreTable -> Maybe Int -> ScoreTable
+newScores : Scores -> Maybe Int -> Scores
 newScores table currentScore =
     case currentScore of
         Nothing ->
             table
 
         Just score ->
-            table ++ [ [ score ] ]
+            table
 
 
 
@@ -89,24 +99,24 @@ renderScoreTable : Model -> Html Msg
 renderScoreTable model =
     div []
         [ text ("Current player: " ++ String.fromInt model.currentPlayer)
-        , table [] (List.map renderScoreRow model.scores)
+        , table [] (List.map renderPlayerScores model.scores)
         ]
 
 
-renderScoreRow : ScoreRow -> Html Msg
-renderScoreRow row =
-    tr [] (List.map renderScore row)
+renderPlayerScores : PlayerScores -> Html Msg
+renderPlayerScores playerScores =
+    tr [] (td [] [ text playerScores.name ] :: renderScores playerScores.scores)
 
 
-renderScore : Int -> Html Msg
-renderScore score =
-    td [] [ text (String.fromInt score) ]
+renderScores : List Int -> List (Html Msg)
+renderScores scores =
+    List.map (\x -> td [] [ text (String.fromInt x) ]) scores
 
 
 renderScoreInput : Html Msg
 renderScoreInput =
     div []
-        [ input [ type_ "number", value "0", onInput Scored ] []
+        [ input [ type_ "number", value "0", onInput ScoreInputChanged ] []
         , button [ onClick Score ] [ text "Add" ]
         ]
 
