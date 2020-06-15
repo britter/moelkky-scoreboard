@@ -6,6 +6,7 @@ module Main exposing (..)
 --   https://guide.elm-lang.org/architecture/buttons.html
 --
 
+import Array exposing (Array)
 import Browser
 import Html exposing (Html, button, div, input, table, td, text, tr)
 import Html.Attributes exposing (..)
@@ -32,7 +33,7 @@ type alias Model =
 
 
 type alias Scores =
-    List PlayerScores
+    Array PlayerScores
 
 
 type alias PlayerScores =
@@ -46,11 +47,12 @@ init =
     { currentPlayer = 0
     , currentScoreInput = Nothing
     , scores =
-        [ { name = "Adam", scores = [ 2, 5, 9 ] }
-        , { name = "Bianca", scores = [ 11, 1, 0 ] }
-        , { name = "Charles", scores = [ 5, 4, 8 ] }
-        , { name = "Deborah", scores = [ 9, 0, 3 ] }
-        ]
+        Array.fromList
+            [ { name = "Adam", scores = [ 2, 5, 9 ] }
+            , { name = "Bianca", scores = [ 11, 1, 0 ] }
+            , { name = "Charles", scores = [ 5, 4, 8 ] }
+            , { name = "Deborah", scores = [ 9, 0, 3 ] }
+            ]
     }
 
 
@@ -70,17 +72,31 @@ update msg model =
             { model | currentScoreInput = String.toInt newScoreInput }
 
         Score ->
-            { model | currentPlayer = model.currentPlayer + 1, scores = newScores model.scores model.currentScoreInput }
+            { model | currentPlayer = model.currentPlayer + 1, scores = newScores model.scores model.currentPlayer model.currentScoreInput }
 
 
-newScores : Scores -> Maybe Int -> Scores
-newScores table currentScore =
+newScores : Scores -> Int -> Maybe Int -> Scores
+newScores scores currentPlayer currentScore =
     case currentScore of
         Nothing ->
-            table
+            scores
 
         Just score ->
-            table
+            updateScores scores currentPlayer score
+
+
+updateScores : Scores -> Int -> Int -> Scores
+updateScores scores currentPlayer currentScore =
+    let
+        currentPlayerScore =
+            Array.get currentPlayer scores
+    in
+    case currentPlayerScore of
+        Nothing ->
+            scores
+
+        Just someScores ->
+            Array.set currentPlayer { someScores | scores = someScores.scores ++ [ currentScore ] } scores
 
 
 
@@ -91,7 +107,7 @@ renderScoreTable : Model -> Html Msg
 renderScoreTable model =
     div []
         [ text ("Current player: " ++ String.fromInt model.currentPlayer)
-        , table [] (List.map renderPlayerScores model.scores)
+        , table [] (List.map renderPlayerScores (Array.toList model.scores))
         ]
 
 
