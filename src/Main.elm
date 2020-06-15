@@ -135,7 +135,7 @@ renderScoreTable model =
 
 renderPlayerScores : PlayerScores -> Html Msg
 renderPlayerScores playerScores =
-    tr [] (td [] [ text playerScores.name ] :: renderScores playerScores.scores)
+    tr [] (td [] [ text playerScores.name ] :: td [] [ text (String.fromInt (List.sum playerScores.scores)) ] :: renderScores playerScores.scores)
 
 
 renderScores : List Int -> List (Html Msg)
