@@ -8,7 +8,7 @@ module Main exposing (..)
 
 import Array exposing (Array)
 import Browser
-import Html exposing (Html, button, div, input, table, td, text, tr)
+import Html exposing (Html, button, div, input, li, table, td, text, tr, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 
@@ -25,7 +25,18 @@ main =
 -- MODEL
 
 
-type alias Model =
+type Model
+    = Setup SetupModel
+    | GameState GameStateModel
+
+
+type alias SetupModel =
+    { currentNameInput : Maybe String
+    , players : List String
+    }
+
+
+type alias GameStateModel =
     { gameRound : Int
     , currentScoreInput : Maybe Int
     , scores : Scores
@@ -44,16 +55,7 @@ type alias PlayerScores =
 
 init : Model
 init =
-    { gameRound = 0
-    , currentScoreInput = Nothing
-    , scores =
-        Array.fromList
-            [ { name = "Adam", scores = [ 2, 5, 9 ] }
-            , { name = "Bianca", scores = [ 11, 1, 0 ] }
-            , { name = "Charles", scores = [ 5, 4, 8 ] }
-            , { name = "Deborah", scores = [ 9, 0, 3 ] }
-            ]
-    }
+    Setup { currentNameInput = Nothing, players = [] }
 
 
 
@@ -61,21 +63,46 @@ init =
 
 
 type Msg
-    = ScoreInputChanged String
+    = PlayerNameInputChanged String
+    | AddPlayer
+    | StartGame
+    | ScoreInputChanged String
     | Score
 
 
 update : Msg -> Model -> Model
 update msg model =
-    case msg of
-        ScoreInputChanged newScoreInput ->
-            { model | currentScoreInput = String.toInt newScoreInput }
+    case ( msg, model ) of
+        ( PlayerNameInputChanged newPlayerName, Setup setup ) ->
+            Setup { setup | currentNameInput = Just newPlayerName }
 
-        Score ->
-            { model | gameRound = model.gameRound + 1, scores = newScores model.scores (currentPlayer model) model.currentScoreInput }
+        ( AddPlayer, Setup setup ) ->
+            case setup.currentNameInput of
+                Just name ->
+                    Setup { setup | currentNameInput = Nothing, players = setup.players ++ [ name ] }
+
+                Nothing ->
+                    model
+
+        ( StartGame, Setup setup ) ->
+            GameState { gameRound = 0, currentScoreInput = Nothing, scores = initScores setup.players }
+
+        ( ScoreInputChanged newScoreInput, GameState state ) ->
+            GameState { state | currentScoreInput = String.toInt newScoreInput }
+
+        ( Score, GameState state ) ->
+            GameState { state | gameRound = state.gameRound + 1, scores = newScores state.scores (currentPlayer state) state.currentScoreInput }
+
+        ( _, _ ) ->
+            model
 
 
-currentPlayer : Model -> Int
+initScores : List String -> Scores
+initScores players =
+    Array.fromList (List.map (\player -> { name = player, scores = [] }) players)
+
+
+currentPlayer : GameStateModel -> Int
 currentPlayer model =
     modBy (Array.length model.scores) model.gameRound
 
@@ -108,7 +135,7 @@ updateScores scores player currentScore =
 -- VIEW
 
 
-renderScoreTable : Model -> Html Msg
+renderScoreTable : GameStateModel -> Html Msg
 renderScoreTable model =
     div []
         [ text ("Current game round: " ++ String.fromInt model.gameRound)
@@ -134,9 +161,31 @@ renderScoreInput =
         ]
 
 
+renderPlayers : List String -> Html Msg
+renderPlayers players =
+    ul [] (List.map (\player -> li [] [ text player ]) players)
+
+
+renderAddPlayerInputs : Html Msg
+renderAddPlayerInputs =
+    div []
+        [ input [ onInput PlayerNameInputChanged ] []
+        , button [ onClick AddPlayer ] [ text "Add" ]
+        ]
+
+
 view : Model -> Html Msg
 view model =
-    div []
-        [ renderScoreTable model
-        , renderScoreInput
-        ]
+    case model of
+        Setup setup ->
+            div []
+                [ renderPlayers setup.players
+                , renderAddPlayerInputs
+                , button [ onClick StartGame ] [ text "Start Game" ]
+                ]
+
+        GameState state ->
+            div []
+                [ renderScoreTable state
+                , renderScoreInput
+                ]
