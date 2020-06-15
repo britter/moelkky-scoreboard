@@ -9,7 +9,7 @@ module Main exposing (..)
 import Array exposing (Array)
 import Browser
 import Html exposing (Html, button, div, input, li, table, td, text, tr, ul)
-import Html.Attributes exposing (..)
+import Html.Attributes
 import Html.Events exposing (onClick, onInput)
 
 
@@ -156,7 +156,7 @@ renderScores scores =
 renderScoreInput : Html Msg
 renderScoreInput =
     div []
-        [ input [ type_ "number", value "0", onInput ScoreInputChanged ] []
+        [ input [ Html.Attributes.type_ "number", Html.Attributes.value "0", Html.Attributes.min "0", Html.Attributes.max "12", onInput ScoreInputChanged ] []
         , button [ onClick Score ] [ text "Add" ]
         ]
 
@@ -181,7 +181,7 @@ view model =
             div []
                 [ renderPlayers setup.players
                 , renderAddPlayerInputs
-                , button [ onClick StartGame ] [ text "Start Game" ]
+                , button [ Html.Attributes.disabled (List.isEmpty setup.players), onClick StartGame ] [ text "Start Game" ]
                 ]
 
         GameState state ->
