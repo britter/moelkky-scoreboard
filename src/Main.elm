@@ -69,6 +69,8 @@ type Msg
     | StartGame
     | ScoreInputChanged String
     | Score
+    | Rematch
+    | NewGame
 
 
 update : Msg -> Model -> Model
@@ -102,6 +104,12 @@ update msg model =
 
                 Nothing ->
                     GameState { state | gameRound = state.gameRound + 1, scores = updatedScores }
+
+        ( Rematch, PlayerWins _ scores ) ->
+            GameState { gameRound = 0, currentScoreInput = Nothing, scores = initScores (playerNames scores) }
+
+        ( NewGame, _ ) ->
+            init
 
         ( _, _ ) ->
             model
@@ -160,8 +168,15 @@ winningPlayer : Scores -> Maybe String
 winningPlayer scores =
     scores
         |> Array.filter (\x -> List.sum x.scores == 50)
-        |> Array.map (\x -> x.name)
-        |> Array.get 0
+        |> playerNames
+        |> List.head
+
+
+playerNames : Scores -> List String
+playerNames scores =
+    scores
+        |> Array.toList
+        |> List.map (\x -> x.name)
 
 
 
@@ -224,4 +239,6 @@ view model =
             div []
                 [ renderScoreTable scores
                 , h1 [] [ text ("Player " ++ name ++ " wins the game!") ]
+                , button [ onClick Rematch ] [ text "Rematch" ]
+                , button [ onClick NewGame ] [ text "New Game" ]
                 ]
