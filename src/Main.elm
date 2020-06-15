@@ -123,12 +123,27 @@ updateScores scores player currentScoreInput =
 
 calculateScores : List Int -> Int -> List Int
 calculateScores scores newScore =
+    let
+        total =
+            List.sum scores
+
+        newTotal =
+            total + newScore
+    in
     case ( scores, newScore ) of
         ( 0 :: 0 :: _, 0 ) ->
-            -15 :: scores
+            if total < 15 then
+                -total :: scores
+
+            else
+                -15 :: scores
 
         ( _, _ ) ->
-            newScore :: scores
+            if newTotal > 50 then
+                -(total - 25) :: scores
+
+            else
+                newScore :: scores
 
 
 
@@ -145,7 +160,7 @@ renderScoreTable model =
 
 renderPlayerScores : PlayerScores -> Html Msg
 renderPlayerScores playerScores =
-    tr [] (td [] [ text playerScores.name ] :: td [] [ text (String.fromInt (List.sum playerScores.scores)) ] :: renderScores playerScores.scores)
+    tr [] (td [] [ text playerScores.name ] :: td [] [ text (String.fromInt (List.sum playerScores.scores)) ] :: renderScores (List.reverse playerScores.scores))
 
 
 renderScores : List Int -> List (Html Msg)
