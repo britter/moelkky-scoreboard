@@ -1,11 +1,5 @@
 module Main exposing (..)
 
--- Press buttons to increment and decrement a counter.
---
--- Read how it works:
---   https://guide.elm-lang.org/architecture/buttons.html
---
-
 import Array exposing (Array)
 import Browser
 import Html exposing (Html, button, div, h1, input, li, table, td, text, tr, ul)
