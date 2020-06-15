@@ -8,7 +8,7 @@ module Main exposing (..)
 
 import Array exposing (Array)
 import Browser
-import Html exposing (Html, button, div, input, li, table, td, text, tr, ul)
+import Html exposing (Html, button, div, h1, input, li, table, td, text, tr, ul)
 import Html.Attributes
 import Html.Events exposing (onClick, onInput)
 
@@ -28,6 +28,7 @@ main =
 type Model
     = Setup SetupModel
     | GameState GameStateModel
+    | PlayerWins String Scores
 
 
 type alias SetupModel =
@@ -91,7 +92,16 @@ update msg model =
             GameState { state | currentScoreInput = String.toInt newScoreInput }
 
         ( Score, GameState state ) ->
-            GameState { state | gameRound = state.gameRound + 1, scores = updateScores state.scores (currentPlayer state) state.currentScoreInput }
+            let
+                updatedScores =
+                    updateScores state.scores (currentPlayer state) state.currentScoreInput
+            in
+            case winningPlayer updatedScores of
+                Just player ->
+                    PlayerWins player updatedScores
+
+                Nothing ->
+                    GameState { state | gameRound = state.gameRound + 1, scores = updatedScores }
 
         ( _, _ ) ->
             model
@@ -146,16 +156,21 @@ calculateScores scores newScore =
                 newScore :: scores
 
 
+winningPlayer : Scores -> Maybe String
+winningPlayer scores =
+    scores
+        |> Array.filter (\x -> List.sum x.scores == 50)
+        |> Array.map (\x -> x.name)
+        |> Array.get 0
+
+
 
 -- VIEW
 
 
-renderScoreTable : GameStateModel -> Html Msg
-renderScoreTable model =
-    div []
-        [ text ("Current game round: " ++ String.fromInt model.gameRound)
-        , table [] (List.map renderPlayerScores (Array.toList model.scores))
-        ]
+renderScoreTable : Scores -> Html Msg
+renderScoreTable scores =
+    table [] (List.map renderPlayerScores (Array.toList scores))
 
 
 renderPlayerScores : PlayerScores -> Html Msg
@@ -201,6 +216,12 @@ view model =
 
         GameState state ->
             div []
-                [ renderScoreTable state
+                [ renderScoreTable state.scores
                 , renderScoreInput
+                ]
+
+        PlayerWins name scores ->
+            div []
+                [ renderScoreTable scores
+                , h1 [] [ text ("Player " ++ name ++ " wins the game!") ]
                 ]
