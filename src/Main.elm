@@ -91,7 +91,7 @@ update msg model =
             GameState { state | currentScoreInput = String.toInt newScoreInput }
 
         ( Score, GameState state ) ->
-            GameState { state | gameRound = state.gameRound + 1, scores = newScores state.scores (currentPlayer state) state.currentScoreInput }
+            GameState { state | gameRound = state.gameRound + 1, scores = updateScores state.scores (currentPlayer state) state.currentScoreInput }
 
         ( _, _ ) ->
             model
@@ -107,28 +107,18 @@ currentPlayer model =
     modBy (Array.length model.scores) model.gameRound
 
 
-newScores : Scores -> Int -> Maybe Int -> Scores
-newScores scores player currentScore =
-    case currentScore of
-        Nothing ->
-            scores
-
-        Just score ->
-            updateScores scores player score
-
-
-updateScores : Scores -> Int -> Int -> Scores
-updateScores scores player currentScore =
+updateScores : Scores -> Int -> Maybe Int -> Scores
+updateScores scores player currentScoreInput =
     let
-        currentPlayerScore =
+        currentPlayerScores =
             Array.get player scores
     in
-    case currentPlayerScore of
-        Nothing ->
-            scores
+    case ( currentPlayerScores, currentScoreInput ) of
+        ( Just someScores, Just input ) ->
+            Array.set player { someScores | scores = someScores.scores ++ [ input ] } scores
 
-        Just someScores ->
-            Array.set player { someScores | scores = someScores.scores ++ [ currentScore ] } scores
+        ( _, _ ) ->
+            scores
 
 
 
