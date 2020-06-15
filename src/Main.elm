@@ -26,7 +26,7 @@ main =
 
 
 type alias Model =
-    { currentPlayer : Int
+    { gameRound : Int
     , currentScoreInput : Maybe Int
     , scores : Scores
     }
@@ -44,7 +44,7 @@ type alias PlayerScores =
 
 init : Model
 init =
-    { currentPlayer = 0
+    { gameRound = 0
     , currentScoreInput = Nothing
     , scores =
         Array.fromList
@@ -72,31 +72,36 @@ update msg model =
             { model | currentScoreInput = String.toInt newScoreInput }
 
         Score ->
-            { model | currentPlayer = model.currentPlayer + 1, scores = newScores model.scores model.currentPlayer model.currentScoreInput }
+            { model | gameRound = model.gameRound + 1, scores = newScores model.scores (currentPlayer model) model.currentScoreInput }
+
+
+currentPlayer : Model -> Int
+currentPlayer model =
+    modBy (Array.length model.scores) model.gameRound
 
 
 newScores : Scores -> Int -> Maybe Int -> Scores
-newScores scores currentPlayer currentScore =
+newScores scores player currentScore =
     case currentScore of
         Nothing ->
             scores
 
         Just score ->
-            updateScores scores currentPlayer score
+            updateScores scores player score
 
 
 updateScores : Scores -> Int -> Int -> Scores
-updateScores scores currentPlayer currentScore =
+updateScores scores player currentScore =
     let
         currentPlayerScore =
-            Array.get currentPlayer scores
+            Array.get player scores
     in
     case currentPlayerScore of
         Nothing ->
             scores
 
         Just someScores ->
-            Array.set currentPlayer { someScores | scores = someScores.scores ++ [ currentScore ] } scores
+            Array.set player { someScores | scores = someScores.scores ++ [ currentScore ] } scores
 
 
 
@@ -106,7 +111,7 @@ updateScores scores currentPlayer currentScore =
 renderScoreTable : Model -> Html Msg
 renderScoreTable model =
     div []
-        [ text ("Current player: " ++ String.fromInt model.currentPlayer)
+        [ text ("Current game round: " ++ String.fromInt model.gameRound)
         , table [] (List.map renderPlayerScores (Array.toList model.scores))
         ]
 
