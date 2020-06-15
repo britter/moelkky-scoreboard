@@ -115,10 +115,20 @@ updateScores scores player currentScoreInput =
     in
     case ( currentPlayerScores, currentScoreInput ) of
         ( Just someScores, Just input ) ->
-            Array.set player { someScores | scores = someScores.scores ++ [ input ] } scores
+            Array.set player { someScores | scores = calculateScores someScores.scores input } scores
 
         ( _, _ ) ->
             scores
+
+
+calculateScores : List Int -> Int -> List Int
+calculateScores scores newScore =
+    case ( scores, newScore ) of
+        ( 0 :: 0 :: _, 0 ) ->
+            -15 :: scores
+
+        ( _, _ ) ->
+            newScore :: scores
 
 
 
