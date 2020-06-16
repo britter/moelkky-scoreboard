@@ -1,15 +1,15 @@
 {
-  "main.css": "/static/css/main.7f457dfb.chunk.css",
-  "main.js": "/static/js/main.dddb730e.chunk.js",
-  "main.js.map": "/static/js/main.dddb730e.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.1b922744.js",
-  "runtime~main.js.map": "/static/js/runtime~main.1b922744.js.map",
-  "vendors~main.js": "/static/js/vendors~main.b9063112.chunk.js",
-  "vendors~main.js.map": "/static/js/vendors~main.b9063112.chunk.js.map",
-  "./service-worker.js": "/./service-worker.js",
-  "favicon.ico": "/favicon.ico",
-  "index.html": "/index.html",
-  "logo.svg": "/logo.svg",
-  "manifest.json": "/manifest.json",
-  "precache-manifest.22fe6fcd5be4555e365cbc2197834c1e.js": "/precache-manifest.22fe6fcd5be4555e365cbc2197834c1e.js"
+  "main.css": "/moelkky-scoreboard/static/css/main.7f457dfb.chunk.css",
+  "main.js": "/moelkky-scoreboard/static/js/main.6c526521.chunk.js",
+  "main.js.map": "/moelkky-scoreboard/static/js/main.6c526521.chunk.js.map",
+  "runtime~main.js": "/moelkky-scoreboard/static/js/runtime~main.5aadb8a9.js",
+  "runtime~main.js.map": "/moelkky-scoreboard/static/js/runtime~main.5aadb8a9.js.map",
+  "vendors~main.js": "/moelkky-scoreboard/static/js/vendors~main.b9063112.chunk.js",
+  "vendors~main.js.map": "/moelkky-scoreboard/static/js/vendors~main.b9063112.chunk.js.map",
+  "./service-worker.js": "/moelkky-scoreboard/./service-worker.js",
+  "favicon.ico": "/moelkky-scoreboard/favicon.ico",
+  "index.html": "/moelkky-scoreboard/index.html",
+  "logo.svg": "/moelkky-scoreboard/logo.svg",
+  "manifest.json": "/moelkky-scoreboard/manifest.json",
+  "precache-manifest.278dce3bbc15c162a241230329cc251d.js": "/moelkky-scoreboard/precache-manifest.278dce3bbc15c162a241230329cc251d.js"
 }

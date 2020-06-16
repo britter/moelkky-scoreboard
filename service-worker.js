@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.22fe6fcd5be4555e365cbc2197834c1e.js"
+  "/moelkky-scoreboard/precache-manifest.278dce3bbc15c162a241230329cc251d.js"
 );
 
 workbox.core.skipWaiting();
