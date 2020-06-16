@@ -11,6 +11,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install create-elm-app
-      run: npm install -g create-elm-app
+      run: npm install create-elm-app
     - name: Run tests
-      run: elm-app test
+      run: ./node_modules/.bin/elm-app test
