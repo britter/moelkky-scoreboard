@@ -17,6 +17,8 @@ jobs:
       run: npm install create-elm-app
     - name: Build project
       run: ./node_modules/.bin/elm-app build
+      env:
+        PUBLIC_URL: /moelkky-scoreboard
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
