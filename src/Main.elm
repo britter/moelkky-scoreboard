@@ -1,10 +1,11 @@
 module Main exposing (..)
 
-import Array exposing (Array)
 import Browser
-import Html exposing (Html, button, div, h1, input, li, table, td, text, tr, ul)
-import Html.Attributes
-import Html.Events exposing (onClick, onInput)
+import Html exposing (Html, div, h1, text)
+import ScoreTable
+import Scoring
+import Setup
+import Summary
 
 
 
@@ -20,37 +21,14 @@ main =
 
 
 type Model
-    = Setup SetupModel
-    | GameState GameStateModel
-    | PlayerWins String Scores
-
-
-type alias SetupModel =
-    { currentNameInput : Maybe String
-    , players : List String
-    }
-
-
-type alias GameStateModel =
-    { gameRound : Int
-    , currentScoreInput : Maybe Int
-    , scores : Scores
-    }
-
-
-type alias Scores =
-    Array PlayerScores
-
-
-type alias PlayerScores =
-    { name : String
-    , scores : List Int
-    }
+    = Setup Setup.Model
+    | Scoring Scoring.Model
+    | Summary Summary.Model
 
 
 init : Model
 init =
-    Setup { currentNameInput = Nothing, players = [] }
+    Setup Setup.init
 
 
 
@@ -58,181 +36,66 @@ init =
 
 
 type Msg
-    = PlayerNameInputChanged String
-    | AddPlayer
-    | StartGame
-    | ScoreInputChanged String
-    | Score
-    | Rematch
-    | NewGame
+    = GotSetupMessage Setup.Msg
+    | GotScoringMessage Scoring.Msg
+    | GotSummaryMessage Summary.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case ( msg, model ) of
-        ( PlayerNameInputChanged newPlayerName, Setup setup ) ->
-            Setup { setup | currentNameInput = Just newPlayerName }
+        ( GotSetupMessage setupMsg, Setup setup ) ->
+            case setupMsg of
+                Setup.StartGame ->
+                    Scoring (Scoring.init setup.players)
 
-        ( AddPlayer, Setup setup ) ->
-            case setup.currentNameInput of
-                Just name ->
-                    Setup { setup | currentNameInput = Nothing, players = setup.players ++ [ name ] }
+                _ ->
+                    Setup (Setup.update setupMsg setup)
 
-                Nothing ->
-                    model
-
-        ( StartGame, Setup setup ) ->
-            GameState { gameRound = 0, currentScoreInput = Nothing, scores = initScores setup.players }
-
-        ( ScoreInputChanged newScoreInput, GameState state ) ->
-            GameState { state | currentScoreInput = String.toInt newScoreInput }
-
-        ( Score, GameState state ) ->
+        ( GotScoringMessage scoreTableMsg, Scoring scoreTable ) ->
             let
-                updatedScores =
-                    updateScores state.scores (currentPlayer state) state.currentScoreInput
+                updatedScoreTable =
+                    Scoring.update scoreTableMsg scoreTable
             in
-            case winningPlayer updatedScores of
+            case ScoreTable.winningPlayer updatedScoreTable.scores of
                 Just player ->
-                    PlayerWins player updatedScores
+                    Summary (Summary.init player updatedScoreTable.scores)
 
                 Nothing ->
-                    GameState { state | gameRound = state.gameRound + 1, scores = updatedScores }
+                    Scoring updatedScoreTable
 
-        ( Rematch, PlayerWins _ scores ) ->
-            GameState { gameRound = 0, currentScoreInput = Nothing, scores = initScores (playerNames scores) }
+        ( GotSummaryMessage summaryMsg, Summary summary ) ->
+            case summaryMsg of
+                Summary.Rematch ->
+                    Scoring (Scoring.init (ScoreTable.playerNames summary.scores))
 
-        ( NewGame, _ ) ->
-            init
+                Summary.NewGame ->
+                    init
 
         ( _, _ ) ->
             model
-
-
-initScores : List String -> Scores
-initScores players =
-    Array.fromList (List.map (\player -> { name = player, scores = [] }) players)
-
-
-currentPlayer : GameStateModel -> Int
-currentPlayer model =
-    modBy (Array.length model.scores) model.gameRound
-
-
-updateScores : Scores -> Int -> Maybe Int -> Scores
-updateScores scores player currentScoreInput =
-    let
-        currentPlayerScores =
-            Array.get player scores
-    in
-    case ( currentPlayerScores, currentScoreInput ) of
-        ( Just someScores, Just input ) ->
-            Array.set player { someScores | scores = calculateScores someScores.scores input } scores
-
-        ( _, _ ) ->
-            scores
-
-
-calculateScores : List Int -> Int -> List Int
-calculateScores scores newScore =
-    let
-        total =
-            List.sum scores
-
-        newTotal =
-            total + newScore
-    in
-    case ( scores, newScore ) of
-        ( 0 :: 0 :: _, 0 ) ->
-            if total < 15 then
-                -total :: scores
-
-            else
-                -15 :: scores
-
-        ( _, _ ) ->
-            if newTotal > 50 then
-                -(total - 25) :: scores
-
-            else
-                newScore :: scores
-
-
-winningPlayer : Scores -> Maybe String
-winningPlayer scores =
-    scores
-        |> Array.filter (\x -> List.sum x.scores == 50)
-        |> playerNames
-        |> List.head
-
-
-playerNames : Scores -> List String
-playerNames scores =
-    scores
-        |> Array.toList
-        |> List.map (\x -> x.name)
 
 
 
 -- VIEW
 
 
-renderScoreTable : Scores -> Html Msg
-renderScoreTable scores =
-    table [] (List.map renderPlayerScores (Array.toList scores))
-
-
-renderPlayerScores : PlayerScores -> Html Msg
-renderPlayerScores playerScores =
-    tr [] (td [] [ text playerScores.name ] :: td [] [ text (String.fromInt (List.sum playerScores.scores)) ] :: renderScores (List.reverse playerScores.scores))
-
-
-renderScores : List Int -> List (Html Msg)
-renderScores scores =
-    List.map (\x -> td [] [ text (String.fromInt x) ]) scores
-
-
-renderScoreInput : Html Msg
-renderScoreInput =
-    div []
-        [ input [ Html.Attributes.type_ "number", Html.Attributes.value "0", Html.Attributes.min "0", Html.Attributes.max "12", onInput ScoreInputChanged ] []
-        , button [ onClick Score ] [ text "Add" ]
-        ]
-
-
-renderPlayers : List String -> Html Msg
-renderPlayers players =
-    ul [] (List.map (\player -> li [] [ text player ]) players)
-
-
-renderAddPlayerInputs : Html Msg
-renderAddPlayerInputs =
-    div []
-        [ input [ onInput PlayerNameInputChanged ] []
-        , button [ onClick AddPlayer ] [ text "Add" ]
-        ]
-
-
 view : Model -> Html Msg
 view model =
     case model of
         Setup setup ->
-            div []
-                [ renderPlayers setup.players
-                , renderAddPlayerInputs
-                , button [ Html.Attributes.disabled (List.isEmpty setup.players), onClick StartGame ] [ text "Start Game" ]
-                ]
+            wrap (Html.map GotSetupMessage (Setup.view setup))
 
-        GameState state ->
-            div []
-                [ renderScoreTable state.scores
-                , renderScoreInput
-                ]
+        Scoring scoring ->
+            wrap (Html.map GotScoringMessage (Scoring.view scoring))
 
-        PlayerWins name scores ->
-            div []
-                [ renderScoreTable scores
-                , h1 [] [ text ("Player " ++ name ++ " wins the game!") ]
-                , button [ onClick Rematch ] [ text "Rematch" ]
-                , button [ onClick NewGame ] [ text "New Game" ]
-                ]
+        Summary summary ->
+            wrap (Html.map GotSummaryMessage (Summary.view summary))
+
+
+wrap : Html Msg -> Html Msg
+wrap content =
+    div []
+        [ h1 [] [ text "Mölkky Scoreboard" ]
+        , content
+        ]
