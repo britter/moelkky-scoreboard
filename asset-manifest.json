@@ -1,7 +1,7 @@
 {
   "main.css": "/moelkky-scoreboard/static/css/main.7f457dfb.chunk.css",
-  "main.js": "/moelkky-scoreboard/static/js/main.6c526521.chunk.js",
-  "main.js.map": "/moelkky-scoreboard/static/js/main.6c526521.chunk.js.map",
+  "main.js": "/moelkky-scoreboard/static/js/main.0f5136cd.chunk.js",
+  "main.js.map": "/moelkky-scoreboard/static/js/main.0f5136cd.chunk.js.map",
   "runtime~main.js": "/moelkky-scoreboard/static/js/runtime~main.5aadb8a9.js",
   "runtime~main.js.map": "/moelkky-scoreboard/static/js/runtime~main.5aadb8a9.js.map",
   "vendors~main.js": "/moelkky-scoreboard/static/js/vendors~main.b9063112.chunk.js",
@@ -11,5 +11,5 @@
   "index.html": "/moelkky-scoreboard/index.html",
   "logo.svg": "/moelkky-scoreboard/logo.svg",
   "manifest.json": "/moelkky-scoreboard/manifest.json",
-  "precache-manifest.278dce3bbc15c162a241230329cc251d.js": "/moelkky-scoreboard/precache-manifest.278dce3bbc15c162a241230329cc251d.js"
+  "precache-manifest.d9d35d5b24241adfa7722600fdb2236d.js": "/moelkky-scoreboard/precache-manifest.d9d35d5b24241adfa7722600fdb2236d.js"
 }
