@@ -1,7 +1,7 @@
 module Setup exposing (Model, Msg(..), init, update, view)
 
 import Html exposing (Html, button, div, input, li, text, ul)
-import Html.Attributes exposing (class, disabled)
+import Html.Attributes exposing (class, disabled, placeholder)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -69,7 +69,7 @@ playerList players =
 addPlayerInputs : Html Msg
 addPlayerInputs =
     div []
-        [ input [ class "player-name", onInput PlayerNameInputChanged ] []
+        [ input [ class "player-name", onInput PlayerNameInputChanged, placeholder "insert player name" ] []
         , button [ class "add-player", onClick AddPlayer ] [ text "Add" ]
         ]
 
