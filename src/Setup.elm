@@ -54,26 +54,31 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "setup" ]
-        [ playerList model.players
-        , addPlayerInputs
-        , startGameButton model
+    div [ class "setup", class "section" ]
+        [ div [ class "row" ] [ playerList model.players ]
+        , div [ class "row" ] addPlayerInputs
+        , div [ class "row" ] [ startGameButton model ]
         ]
 
 
 playerList : List String -> Html Msg
 playerList players =
-    ul [ class "player-list" ] (List.map (\player -> li [] [ text player ]) players)
+    div [ class "col s12" ] [ ul [ class "player-list" ] (List.map (\player -> li [] [ text player ]) players) ]
 
 
-addPlayerInputs : Html Msg
+addPlayerInputs : List (Html Msg)
 addPlayerInputs =
-    div []
+    [ div [ class "col s12 m6" ]
         [ input [ class "player-name", onInput PlayerNameInputChanged, placeholder "insert player name" ] []
-        , button [ class "add-player", onClick AddPlayer ] [ text "Add" ]
         ]
+    , div
+        [ class "col s12 m6" ]
+        [ button [ class "add-player", class "waves-effect waves-light btn", onClick AddPlayer ] [ text "Add" ] ]
+    ]
 
 
 startGameButton : Model -> Html Msg
 startGameButton model =
-    button [ class "start-game", disabled (List.isEmpty model.players), onClick StartGame ] [ text "Start Game" ]
+    div [ class "col s12" ]
+        [ button [ class "start-game", class "waves-effect waves-light btn red", disabled (List.isEmpty model.players), onClick StartGame ] [ text "Start Game" ]
+        ]
