@@ -37,27 +37,29 @@ scoreTableSuite =
                 \_ ->
                     ScoreTable.view amandaWinning
                         |> Query.fromHtml
-                        |> Query.findAll [ tag "tr", class "player-scores" ]
+                        |> Query.find [ class "player-names" ]
+                        |> Query.children [ class "player-name" ]
                         |> Query.count (Expect.equal 3)
             , test "renders the player name" <|
                 \_ ->
                     ScoreTable.view amandaWinning
                         |> Query.fromHtml
-                        |> Query.findAll [ tag "td", class "player-name" ]
+                        |> Query.findAll [ class "player-name" ]
                         |> Query.index 0
                         |> Query.has [ text "Amanda" ]
             , test "renders the score sum per player" <|
                 \_ ->
                     ScoreTable.view amandaWinning
                         |> Query.fromHtml
-                        |> Query.findAll [ tag "td", class "score-sum" ]
+                        |> Query.findAll [ class "score-total" ]
                         |> Query.index 0
                         |> Query.has [ text "50" ]
             , test "renders individual scores" <|
                 \_ ->
                     ScoreTable.view amandaScored
                         |> Query.fromHtml
-                        |> Query.find [ tag "td", class "score" ]
+                        |> Query.findAll [ class "score" ]
+                        |> Query.index 0
                         |> Query.has [ text "10" ]
             ]
         ]
