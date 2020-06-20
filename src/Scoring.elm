@@ -62,15 +62,19 @@ currentPlayer model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "scoring" ]
-        [ ScoreTable.view model.scores
-        , scoreInput
+    div [ class "scoring", class "section" ]
+        [ div [ class "row" ] [ ScoreTable.view model.scores ]
+        , div [ class "row" ] scoreInput
         ]
 
 
-scoreInput : Html Msg
+scoreInput : List (Html Msg)
 scoreInput =
-    div []
-        [ input [ class "score-input", type_ "number", value "0", Html.Attributes.min "0", Html.Attributes.max "12", onInput ScoreInputChanged ] []
-        , button [ class "score-btn", onClick Score ] [ text "Add" ]
+    [ div [ class "input-field col s12" ]
+        [ input [ class "score-input", type_ "number", value "0", Html.Attributes.min "0", Html.Attributes.max "12", onInput ScoreInputChanged ] [] ]
+    , div [ class "col s12" ]
+        [ button
+            [ class "score-btn", class "waves-effect waves-light btn", onClick Score ]
+            [ text "Add Score" ]
         ]
+    ]

@@ -1,7 +1,7 @@
 module ScoreTable exposing (Model, PlayerScores, init, playerNames, updateScores, view, winningPlayer)
 
 import Array exposing (Array)
-import Html exposing (Html, table, tbody, td, text, tfoot, th, thead, tr)
+import Html exposing (Html, div, table, tbody, td, text, tfoot, th, thead, tr)
 import Html.Attributes exposing (class)
 import ScoreCalculation
 
@@ -97,10 +97,11 @@ emptyTails list =
 
 view : Model -> Html msg
 view model =
-    table [ class "score-table" ]
-        [ thead [] [ playerNamesRow model ]
-        , tbody [] (scoreTable model)
-        , tfoot [] [ playerScoreTotals model ]
+    div [ class "col s12" ]
+        [ table [ class "score-table", class "centered" ]
+            [ thead [] [ playerNamesRow model ]
+            , tbody [] (scoreTable model)
+            ]
         ]
 
 
@@ -118,7 +119,7 @@ scoreTable model =
                 |> Array.toList
                 |> List.map getScores
     in
-    scoreTableRows scores
+    scoreTableRows scores ++ [ playerScoreTotals model ]
 
 
 scoreTableRows : List (List Int) -> List (Html msg)
