@@ -1,7 +1,7 @@
 module Setup exposing (Model, Msg(..), init, update, view)
 
 import Html exposing (Html, button, div, input, li, text, ul)
-import Html.Attributes exposing (class, disabled, placeholder)
+import Html.Attributes exposing (class, disabled, placeholder, value)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -56,7 +56,7 @@ view : Model -> Html Msg
 view model =
     div [ class "setup", class "section" ]
         [ div [ class "row" ] [ playerList model.players ]
-        , div [ class "row" ] addPlayerInputs
+        , div [ class "row" ] (addPlayerInputs model)
         , div [ class "row" ] [ startGameButton model ]
         ]
 
@@ -66,15 +66,25 @@ playerList players =
     div [ class "col s12" ] [ ul [ class "player-list" ] (List.map (\player -> li [] [ text player ]) players) ]
 
 
-addPlayerInputs : List (Html Msg)
-addPlayerInputs =
-    [ div [ class "col s12 m6" ]
-        [ input [ class "player-name", onInput PlayerNameInputChanged, placeholder "insert player name" ] []
+addPlayerInputs : Model -> List (Html Msg)
+addPlayerInputs model =
+    [ div [ class "input-field col s12 m6" ]
+        [ input [ class "player-name", onInput PlayerNameInputChanged, placeholder "insert player name", value (getPlayerNameInput model) ] []
         ]
     , div
         [ class "col s12 m6" ]
         [ button [ class "add-player", class "waves-effect waves-light btn", onClick AddPlayer ] [ text "Add" ] ]
     ]
+
+
+getPlayerNameInput : Model -> String
+getPlayerNameInput model =
+    case model.currentNameInput of
+        Just input ->
+            input
+
+        Nothing ->
+            ""
 
 
 startGameButton : Model -> Html Msg
