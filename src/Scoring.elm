@@ -2,7 +2,7 @@ module Scoring exposing (Model, Msg(..), init, update, view)
 
 import Array exposing (Array)
 import Html exposing (Html, button, div, input, text)
-import Html.Attributes exposing (class, type_, value)
+import Html.Attributes exposing (class, placeholder, type_, value)
 import Html.Events exposing (onClick, onInput)
 import ScoreTable
 
@@ -45,7 +45,7 @@ update msg model =
                         updatedScores =
                             ScoreTable.updateScores model.scores (currentPlayer model) score
                     in
-                    { model | gameRound = model.gameRound + 1, scores = updatedScores }
+                    { model | gameRound = model.gameRound + 1, currentScoreInput = Nothing, scores = updatedScores }
 
                 Nothing ->
                     model
@@ -56,21 +56,52 @@ currentPlayer model =
     modBy (Array.length model.scores) model.gameRound
 
 
+currentPlayerName : Model -> Maybe String
+currentPlayerName model =
+    model.scores
+        |> Array.get (currentPlayer model)
+        |> Maybe.map ScoreTable.playerName
+
+
 
 -- VIEW
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "scoring" ]
-        [ ScoreTable.view model.scores
-        , scoreInput
+    div [ class "scoring", class "section" ]
+        [ div [ class "row" ] [ ScoreTable.view model.scores ]
+        , div [ class "row" ] (scoreInput model)
         ]
 
 
-scoreInput : Html Msg
-scoreInput =
-    div []
-        [ input [ class "score-input", type_ "number", value "0", Html.Attributes.min "0", Html.Attributes.max "12", onInput ScoreInputChanged ] []
-        , button [ class "score-btn", onClick Score ] [ text "Add" ]
+scoreInput : Model -> List (Html Msg)
+scoreInput model =
+    [ div [ class "input-field col s12" ]
+        [ input [ class "score-input", type_ "number", value (getScoreInputValue model), Html.Attributes.min "0", Html.Attributes.max "12", placeholder (getScoreInputPlaceholder model), onInput ScoreInputChanged ] [] ]
+    , div [ class "col s12" ]
+        [ button
+            [ class "score-btn", class "waves-effect waves-light btn", onClick Score ]
+            [ text "Add Score" ]
         ]
+    ]
+
+
+getScoreInputPlaceholder : Model -> String
+getScoreInputPlaceholder model =
+    case currentPlayerName model of
+        Just player ->
+            "Insert " ++ player ++ "'s score"
+
+        Nothing ->
+            "Insert score"
+
+
+getScoreInputValue : Model -> String
+getScoreInputValue model =
+    case model.currentScoreInput of
+        Just score ->
+            String.fromInt score
+
+        Nothing ->
+            ""

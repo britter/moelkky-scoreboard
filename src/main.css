@@ -24,3 +24,12 @@ img {
   margin: 20px 0;
   max-width: 200px;
 }
+
+.score-totals {
+    border-top-color: rgba(0, 0, 0, 0.35);
+    border-top-style: double;
+}
+
+.score-total {
+    font-weight: 900;
+}
