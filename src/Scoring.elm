@@ -56,6 +56,13 @@ currentPlayer model =
     modBy (Array.length model.scores) model.gameRound
 
 
+currentPlayerName : Model -> Maybe String
+currentPlayerName model =
+    model.scores
+        |> Array.get (currentPlayer model)
+        |> Maybe.map ScoreTable.playerName
+
+
 
 -- VIEW
 
@@ -71,13 +78,23 @@ view model =
 scoreInput : Model -> List (Html Msg)
 scoreInput model =
     [ div [ class "input-field col s12" ]
-        [ input [ class "score-input", type_ "number", value (getScoreInputValue model), Html.Attributes.min "0", Html.Attributes.max "12", placeholder "Insert score", onInput ScoreInputChanged ] [] ]
+        [ input [ class "score-input", type_ "number", value (getScoreInputValue model), Html.Attributes.min "0", Html.Attributes.max "12", placeholder (getScoreInputPlaceholder model), onInput ScoreInputChanged ] [] ]
     , div [ class "col s12" ]
         [ button
             [ class "score-btn", class "waves-effect waves-light btn", onClick Score ]
             [ text "Add Score" ]
         ]
     ]
+
+
+getScoreInputPlaceholder : Model -> String
+getScoreInputPlaceholder model =
+    case currentPlayerName model of
+        Just player ->
+            "Insert " ++ player ++ "'s score"
+
+        Nothing ->
+            "Insert score"
 
 
 getScoreInputValue : Model -> String
