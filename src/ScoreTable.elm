@@ -1,7 +1,7 @@
-module ScoreTable exposing (Model, PlayerScores, init, playerNames, updateScores, view, winningPlayer)
+module ScoreTable exposing (Model, PlayerScores, init, playerName, playerNames, updateScores, view, winningPlayer)
 
 import Array exposing (Array)
-import Html exposing (Html, div, table, tbody, td, text, tfoot, th, thead, tr)
+import Html exposing (Html, div, table, tbody, td, text, th, thead, tr)
 import Html.Attributes exposing (class)
 import ScoreCalculation
 
@@ -56,6 +56,11 @@ playerNames scores =
     scores
         |> Array.toList
         |> List.map (\player -> player.name)
+
+
+playerName : PlayerScores -> String
+playerName scores =
+    scores.name
 
 
 playerScores : Model -> List Int
@@ -144,13 +149,28 @@ scoreCell : Maybe Int -> Html msg
 scoreCell score =
     case score of
         Just num ->
-            td [ class "score" ] [ text (String.fromInt num) ]
+            td [ class "score", class (getColor num) ] [ text (String.fromInt num) ]
 
         Nothing ->
-            td [ class "score" ] []
+            td [ class "score", class "grey-text" ] [ text "0" ]
+
+
+getColor : Int -> String
+getColor score =
+    if score == 0 then
+        "yellow"
+
+    else if score == 12 then
+        "green"
+
+    else if score < 0 then
+        "red"
+
+    else
+        ""
 
 
 playerScoreTotals : Model -> Html msg
 playerScoreTotals model =
-    tr []
+    tr [ class "score-totals" ]
         (List.map (\total -> td [ class "score-total" ] [ text total ]) (List.map String.fromInt (playerScores model)))
