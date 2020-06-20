@@ -123,6 +123,7 @@ scoreTable model =
             model
                 |> Array.toList
                 |> List.map getScores
+                |> List.map List.reverse
     in
     scoreTableRows scores ++ [ playerScoreTotals model ]
 
